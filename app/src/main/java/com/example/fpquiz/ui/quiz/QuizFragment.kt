@@ -14,6 +14,8 @@ import com.example.fpquiz.databinding.FragmentQuizBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.findNavController
+import androidx.core.os.bundleOf
 
 @AndroidEntryPoint
 class QuizFragment : Fragment(R.layout.fragment_quiz) {
@@ -62,7 +64,14 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
                 btnSeguent.isEnabled = estat.respostaDonada != null
             }
             is QuizUiState.Finalitzat -> {
-                Toast.makeText(requireContext(), "Quiz finalitzat", Toast.LENGTH_SHORT).show()
+                val args = bundleOf(
+                    "puntuacio" to estat.puntuacio,
+                    "total" to estat.total
+                )
+                findNavController().navigate(
+                    R.id.action_quizFragment_to_resultsFragment,
+                    args
+                )
             }
             is QuizUiState.Error -> {
                 Toast.makeText(requireContext(), estat.missatge, Toast.LENGTH_LONG).show()
