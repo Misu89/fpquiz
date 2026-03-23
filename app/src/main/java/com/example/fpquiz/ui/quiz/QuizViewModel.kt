@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import com.example.fpquiz.data.local.PartidaEntity
+import com.example.fpquiz.data.model.Opcio
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
@@ -40,11 +42,38 @@ class QuizViewModel @Inject constructor(
         }
     }
 
+    fun respondre(opcio: Opcio) {
+        val estat = _uiState.value as? QuizUiState.PreguntaActiva ?: return
+        respostes.add(RespostaUsuari(estat.pregunta, opcio))
+        _uiState.value = estat.copy(respostaDonada = opcio)
+    }
+
     private fun mostrarSeguent() {
         _uiState.value = QuizUiState.PreguntaActiva(
             pregunta = preguntes[indexActual],
             indexActual = indexActual + 1,
             total = preguntes.size
         )
+    }
+
+    fun seguent() {
+        indexActual++
+        if (indexActual < preguntes.size) mostrarSeguent()
+        else finalitzar()
+    }
+
+    private fun finalitzar() {
+        val correctes = respostes.count { it.opcioTriada.esCorrecta }
+        _uiState.value = QuizUiState.Finalitzat(correctes, preguntes.size, respostes)
+
+        viewModelScope.launch {
+            repository.guardarPartida(
+                PartidaEntity(
+                    puntuacio = correctes,
+                    totalPreguntes = preguntes.size,
+                    categoria = null
+                )
+            )
+        }
     }
 }
