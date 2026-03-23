@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.example.fpquiz.data.local.PartidaEntity
 import com.example.fpquiz.data.model.Opcio
+import com.example.fpquiz.utils.filtrarPerCategoria
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
@@ -31,7 +32,7 @@ class QuizViewModel @Inject constructor(
             runCatching { repository.carregarPreguntes() }
                 .onSuccess { totes ->
                     preguntes = totes
-                        .filter { categoria == null || it.categoria == categoria }
+                        .filtrarPerCategoria(categoria)
                         .shuffled()
                         .take(10)
                     mostrarSeguent()
