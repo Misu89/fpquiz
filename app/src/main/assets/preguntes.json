@@ -1,0 +1,132 @@
+[
+  {
+    "id": 1,
+    "text": "Quin serà el resultat d'intentar reassignar una variable declarada amb val?",
+    "opcions": [
+      { "text": "Canvia de valor sense problema", "esCorrecta": false },
+      { "text": "Es converteix automàticament en var", "esCorrecta": false },
+      { "text": "Dona error de compilació", "esCorrecta": true },
+      { "text": "Retorna null", "esCorrecta": false }
+    ],
+    "explicacio": "Les variables declarades amb val són immutables i no es poden reassignar.",
+    "categoria": "Fonaments Kotlin",
+    "dificultat": "FACIL"
+  },
+  {
+    "id": 2,
+    "text": "Quin operador serveix per donar un valor per defecte quan una expressió nullable és null?",
+    "opcions": [
+      { "text": "?.", "esCorrecta": false },
+      { "text": "!!", "esCorrecta": false },
+      { "text": "?:", "esCorrecta": true },
+      { "text": "as?", "esCorrecta": false }
+    ],
+    "explicacio": "L'operador Elvis (?:) retorna el valor de la dreta quan l'expressió de l'esquerra és null.",
+    "categoria": "Null safety",
+    "dificultat": "FACIL"
+  },
+  {
+    "id": 3,
+    "text": "Quina scope function és la més adequada per configurar un objecte mutable i retornar-lo?",
+    "opcions": [
+      { "text": "let", "esCorrecta": false },
+      { "text": "also", "esCorrecta": false },
+      { "text": "apply", "esCorrecta": true },
+      { "text": "run", "esCorrecta": false }
+    ],
+    "explicacio": "apply permet configurar l'objecte amb this i retorna el mateix objecte.",
+    "categoria": "Scope functions",
+    "dificultat": "FACIL"
+  },
+  {
+    "id": 4,
+    "text": "Una funció d'extensió pot accedir als camps private de la classe que estén?",
+    "opcions": [
+      { "text": "Sí, sempre", "esCorrecta": false },
+      { "text": "Sí, si és al mateix fitxer", "esCorrecta": false },
+      { "text": "No, mai", "esCorrecta": true },
+      { "text": "Sí, si usa internal", "esCorrecta": false }
+    ],
+    "explicacio": "Les extensions no tenen accés als membres privats perquè no formen part real de la classe.",
+    "categoria": "Extensions",
+    "dificultat": "MITJA"
+  },
+  {
+    "id": 5,
+    "text": "Quin serà el resultat de nums.filter { it > 2 }.map { it * 10 } sobre la llista [1, 2, 3, 4, 5]?",
+    "opcions": [
+      { "text": "[10, 20, 30, 40, 50]", "esCorrecta": false },
+      { "text": "[30, 40, 50]", "esCorrecta": true },
+      { "text": "[3, 4, 5]", "esCorrecta": false },
+      { "text": "[1, 2]", "esCorrecta": false }
+    ],
+    "explicacio": "filter conserva [3, 4, 5] i després map multiplica cada element per 10.",
+    "categoria": "Colleccions",
+    "dificultat": "MITJA"
+  },
+  {
+    "id": 6,
+    "text": "Quina afirmació sobre Sequence és correcta?",
+    "opcions": [
+      { "text": "S'avalua immediatament", "esCorrecta": false },
+      { "text": "Crea llistes intermèdies a cada pas", "esCorrecta": false },
+      { "text": "Necessita una operació terminal per executar-se", "esCorrecta": true },
+      { "text": "Permet accedir per índex", "esCorrecta": false }
+    ],
+    "explicacio": "Les seqüències són lazy i només s'executen quan arriba una operació terminal com toList o first.",
+    "categoria": "Colleccions",
+    "dificultat": "MITJA"
+  },
+  {
+    "id": 7,
+    "text": "Què permet la paraula clau suspend a Kotlin?",
+    "opcions": [
+      { "text": "Bloquejar el fil principal", "esCorrecta": false },
+      { "text": "Pausar i reprendre una funció sense bloquejar el fil", "esCorrecta": true },
+      { "text": "Convertir qualsevol funció en Flow", "esCorrecta": false },
+      { "text": "Executar sempre en Dispatchers.IO", "esCorrecta": false }
+    ],
+    "explicacio": "Una funció suspend pot suspendre's i reprendre's després sense ocupar el fil durant l'espera.",
+    "categoria": "Corrutines",
+    "dificultat": "FACIL"
+  },
+  {
+    "id": 8,
+    "text": "Quina diferència principal hi ha entre launch i async?",
+    "opcions": [
+      { "text": "launch retorna Job i async retorna Deferred amb valor", "esCorrecta": true },
+      { "text": "launch només funciona a Android", "esCorrecta": false },
+      { "text": "async no pot usar await", "esCorrecta": false },
+      { "text": "No hi ha diferència real", "esCorrecta": false }
+    ],
+    "explicacio": "launch és fire-and-forget i async s'usa quan vols recuperar un resultat amb await.",
+    "categoria": "Corrutines",
+    "dificultat": "MITJA"
+  },
+  {
+    "id": 9,
+    "text": "Quin Dispatcher és l'adequat per llegir un fitxer gran del disc?",
+    "opcions": [
+      { "text": "Dispatchers.Main", "esCorrecta": false },
+      { "text": "Dispatchers.Default", "esCorrecta": false },
+      { "text": "Dispatchers.IO", "esCorrecta": true },
+      { "text": "Dispatchers.Unconfined", "esCorrecta": false }
+    ],
+    "explicacio": "Dispatchers.IO està pensat per a operacions d'entrada i sortida com disc, xarxa o base de dades.",
+    "categoria": "Corrutines",
+    "dificultat": "FACIL"
+  },
+  {
+    "id": 10,
+    "text": "Què passa si una corrutina filla falla dins coroutineScope { }?",
+    "opcions": [
+      { "text": "No passa res a la resta", "esCorrecta": false },
+      { "text": "Es cancel·len les altres filles i es propaga l'excepció", "esCorrecta": true },
+      { "text": "Només falla si hi ha async", "esCorrecta": false },
+      { "text": "El scope es converteix en supervisorScope", "esCorrecta": false }
+    ],
+    "explicacio": "Això és concurrència estructurada: si una filla falla dins coroutineScope, la resta es cancel·len i l'error es propaga.",
+    "categoria": "Corrutines",
+    "dificultat": "DIFICIL"
+  }
+]
