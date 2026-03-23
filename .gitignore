@@ -7,3 +7,10 @@
 /captures
 .externalNativeBuild
 .cxx
+.project
+.settings/
+/.classpath
+/app/.classpath
+/app/.project
+/app/.settings/
+/app/build/
