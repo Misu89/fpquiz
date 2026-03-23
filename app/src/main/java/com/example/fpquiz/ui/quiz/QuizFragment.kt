@@ -13,6 +13,7 @@ import com.example.fpquiz.R
 import com.example.fpquiz.databinding.FragmentQuizBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import androidx.recyclerview.widget.LinearLayoutManager
 
 @AndroidEntryPoint
 class QuizFragment : Fragment(R.layout.fragment_quiz) {
@@ -20,9 +21,19 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
     private val viewModel: QuizViewModel by viewModels()
     private lateinit var binding: FragmentQuizBinding
 
+    private val opcioAdapter = OpcioAdapter { opcio ->
+        viewModel.respondre(opcio)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentQuizBinding.bind(view)
+
+        binding.recyclerOpcions.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerOpcions.adapter = opcioAdapter
+        binding.btnSeguent.setOnClickListener {
+            viewModel.seguent()
+        }
 
         viewModel.iniciarQuiz()
 
@@ -46,6 +57,8 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
                 layoutPregunta.isVisible = true
                 txtPregunta.text = estat.pregunta.text
                 txtProgres.text = "${estat.indexActual} / ${estat.total}"
+                opcioAdapter.submitList(estat.pregunta.opcions)
+                opcioAdapter.respostaDonada = estat.respostaDonada
                 btnSeguent.isEnabled = estat.respostaDonada != null
             }
             is QuizUiState.Finalitzat -> {
