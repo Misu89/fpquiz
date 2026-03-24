@@ -14,6 +14,11 @@
         android:name="com.example.fpquiz.ui.quiz.QuizFragment"
         android:label="QuizFragment">
 
+        <argument
+            android:name="categoria"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_quizFragment_to_resultsFragment"
             app:destination="@id/resultsFragment" />

@@ -37,7 +37,8 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
             viewModel.seguent()
         }
 
-        viewModel.iniciarQuiz()
+        val categoria = arguments?.getString("categoria")
+        viewModel.iniciarQuiz(categoria)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
