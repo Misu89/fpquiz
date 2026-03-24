@@ -14,6 +14,13 @@
         android:textSize="24sp" />
 
     <Button
+        android:id="@+id/btnRevisio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Revisar errors" />
+
+    <Button
         android:id="@+id/btnTornarInici"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

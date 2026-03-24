@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.navigation.fragment.findNavController
 import androidx.core.os.bundleOf
 import androidx.core.content.ContextCompat
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @AndroidEntryPoint
 class QuizFragment : Fragment(R.layout.fragment_quiz) {
@@ -56,6 +58,7 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
                 progressBar.isVisible = true
                 layoutPregunta.isVisible = false
             }
+
             is QuizUiState.PreguntaActiva -> {
                 progressBar.isVisible = false
                 layoutPregunta.isVisible = true
@@ -77,16 +80,25 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
                 opcioAdapter.respostaDonada = estat.respostaDonada
                 btnSeguent.isEnabled = estat.respostaDonada != null
             }
+
             is QuizUiState.Finalitzat -> {
+                val jsonIncorrectes = Json.encodeToString(estat.respostes)
+
+                findNavController().currentBackStackEntry
+                    ?.savedStateHandle
+                    ?.set("respostesFinals", jsonIncorrectes)
+
                 val args = bundleOf(
                     "puntuacio" to estat.puntuacio,
                     "total" to estat.total
                 )
+
                 findNavController().navigate(
                     R.id.action_quizFragment_to_resultsFragment,
                     args
                 )
             }
+
             is QuizUiState.Error -> {
                 Toast.makeText(requireContext(), estat.missatge, Toast.LENGTH_LONG).show()
             }

@@ -41,4 +41,9 @@
         android:id="@+id/historyFragment"
         android:name="com.example.fpquiz.ui.history.HistoryFragment"
         android:label="HistoryFragment" />
+
+    <fragment
+        android:id="@+id/reviewFragment"
+        android:name="com.example.fpquiz.ui.review.ReviewFragment"
+        android:label="ReviewFragment" />
 </navigation>
