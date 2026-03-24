@@ -48,5 +48,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 bundleOf("categoria" to categoria)
             )
         }
+
+        binding.btnHistorial.setOnClickListener {
+            findNavController().navigate(R.id.historyFragment)
+        }
     }
 }
