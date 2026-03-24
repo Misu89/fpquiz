@@ -11,8 +11,14 @@ sealed class QuizUiState {
         val pregunta: Pregunta,
         val indexActual: Int,
         val total: Int,
-        val respostaDonada: Opcio? = null
-    ) : QuizUiState()
+        val respostaDonada: Opcio? = null,
+        val segonsRestants: Int = TEMPS_INICIAL
+    ) : QuizUiState() {
+
+        companion object {
+            const val TEMPS_INICIAL = 30
+        }
+    }
 
     data class Finalitzat(
         val puntuacio: Int,

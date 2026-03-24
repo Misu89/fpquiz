@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.navigation.fragment.findNavController
 import androidx.core.os.bundleOf
+import androidx.core.content.ContextCompat
 
 @AndroidEntryPoint
 class QuizFragment : Fragment(R.layout.fragment_quiz) {
@@ -60,6 +61,18 @@ class QuizFragment : Fragment(R.layout.fragment_quiz) {
                 layoutPregunta.isVisible = true
                 txtPregunta.text = estat.pregunta.text
                 txtProgres.text = "${estat.indexActual} / ${estat.total}"
+
+                progressTimer.max = QuizUiState.PreguntaActiva.TEMPS_INICIAL
+                progressTimer.progress = estat.segonsRestants
+                txtTimer.text = "${estat.segonsRestants}s"
+
+                val colorTimer = when {
+                    estat.segonsRestants > 10 -> R.color.green
+                    estat.segonsRestants > 5 -> R.color.neutral
+                    else -> R.color.red
+                }
+                txtTimer.setTextColor(ContextCompat.getColor(requireContext(), colorTimer))
+
                 opcioAdapter.submitList(estat.pregunta.opcions)
                 opcioAdapter.respostaDonada = estat.respostaDonada
                 btnSeguent.isEnabled = estat.respostaDonada != null

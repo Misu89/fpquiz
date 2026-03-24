@@ -2,18 +2,21 @@ package com.example.fpquiz.ui.quiz
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fpquiz.data.local.PartidaEntity
+import com.example.fpquiz.data.model.Opcio
 import com.example.fpquiz.data.model.Pregunta
 import com.example.fpquiz.data.model.RespostaUsuari
 import com.example.fpquiz.data.repository.QuizRepository
+import com.example.fpquiz.utils.filtrarPerCategoria
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import com.example.fpquiz.data.local.PartidaEntity
-import com.example.fpquiz.data.model.Opcio
-import com.example.fpquiz.utils.filtrarPerCategoria
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
@@ -26,8 +29,13 @@ class QuizViewModel @Inject constructor(
     private var preguntes: List<Pregunta> = emptyList()
     private var indexActual = 0
     private val respostes = mutableListOf<RespostaUsuari>()
+    private var timerJob: Job? = null
 
     fun iniciarQuiz(categoria: String? = null) {
+        timerJob?.cancel()
+        indexActual = 0
+        respostes.clear()
+
         viewModelScope.launch {
             runCatching { repository.carregarPreguntes() }
                 .onSuccess { totes ->
@@ -44,6 +52,8 @@ class QuizViewModel @Inject constructor(
     }
 
     fun respondre(opcio: Opcio) {
+        timerJob?.cancel()
+
         val estat = _uiState.value as? QuizUiState.PreguntaActiva ?: return
         respostes.add(RespostaUsuari(estat.pregunta, opcio))
         _uiState.value = estat.copy(respostaDonada = opcio)
@@ -53,8 +63,10 @@ class QuizViewModel @Inject constructor(
         _uiState.value = QuizUiState.PreguntaActiva(
             pregunta = preguntes[indexActual],
             indexActual = indexActual + 1,
-            total = preguntes.size
+            total = preguntes.size,
+            segonsRestants = QuizUiState.PreguntaActiva.TEMPS_INICIAL
         )
+        iniciarTimer()
     }
 
     fun seguent() {
@@ -64,6 +76,8 @@ class QuizViewModel @Inject constructor(
     }
 
     private fun finalitzar() {
+        timerJob?.cancel()
+
         val correctes = respostes.count { it.opcioTriada.esCorrecta }
         _uiState.value = QuizUiState.Finalitzat(correctes, preguntes.size, respostes)
 
@@ -76,5 +90,34 @@ class QuizViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    private fun iniciarTimer() {
+        timerJob?.cancel()
+
+        timerJob = viewModelScope.launch {
+            flow {
+                repeat(QuizUiState.PreguntaActiva.TEMPS_INICIAL) { i ->
+                    emit(QuizUiState.PreguntaActiva.TEMPS_INICIAL - i)
+                    delay(1000)
+                }
+                emit(0)
+            }.collect { segons ->
+                val estat = _uiState.value as? QuizUiState.PreguntaActiva ?: return@collect
+                _uiState.value = estat.copy(segonsRestants = segons)
+
+                if (segons == 0 && estat.respostaDonada == null) {
+                    tempsEsgotat()
+                }
+            }
+        }
+    }
+
+    private fun tempsEsgotat() {
+        val estat = _uiState.value as? QuizUiState.PreguntaActiva ?: return
+
+        val respostaIncorrecta = estat.pregunta.opcions.first { !it.esCorrecta }
+        respostes.add(RespostaUsuari(estat.pregunta, respostaIncorrecta))
+        seguent()
     }
 }
